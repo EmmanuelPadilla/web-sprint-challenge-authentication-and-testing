@@ -1,8 +1,6 @@
-const { default: expectCt } = require('helmet/dist/middlewares/expect-ct')
 const request = require('supertest')
 const server = require('../api/server')
 const db = require('../database/dbConfig')
-const jwt = require('jsonwebtoken');
 
 describe('auth router', () => {
 
@@ -27,27 +25,25 @@ describe('auth router', () => {
     })
   })
 
-  describe('testing POST loggin', async () => {
-    it('allows users to login', async () => {
-      const loginTestOne = await db('users')
-      expect(loginTestOne).toHaveLength(0)
 
-      await request(server).post("api/auth/register").send({
-          username: 'bart',
-          password: "simpson"
+  describe('login endpoint', () => {
+    it('gives a successful status code', async () => {
+      await request(server).post('/api/auth/login')
+      .send({username: 'homer', password: 'simpson'})
+      .then(res =>{
+          expect(res.statusCode).toBe(200)
       })
-      const loginTestTwo = await db('users')
-      expect(loginTestTwo).toHaveLength(1)
-      expect(loginTestTwo[0].username).toMatch('bart')
-      const token = res.body.token
-
-      let response = await request(server). post('/api/auth/login').send({
-          username:'bart',
-          password : 'simpson'
+    })
+    it('gives welcome message', async () => {
+      await request(server).post('api/auth/login')
+      .send({username:'homer', password: 'simpson'})
+      .then(res =>{
+          expect(res.body).toEqual({message: 'Wilkomen meinen damen und heren!'})
       })
-      expect(response).objectContaining(token)
     })
   })
+
+
 
 })
 
