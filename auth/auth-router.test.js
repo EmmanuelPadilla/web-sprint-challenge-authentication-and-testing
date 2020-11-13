@@ -26,7 +26,7 @@ describe('auth router', () => {
       await db('users').truncate() //for good measure
     })
   })
-})
+
   describe('testing POST loggin', async () => {
     it('allows users to login', async () => {
       const loginTestOne = await db('users')
@@ -45,11 +45,11 @@ describe('auth router', () => {
           username:'bart',
           password : 'simpson'
       })
-    //   expect(response).objectContaining(token)
+      expect(response).objectContaining(token)
     })
   })
 
-
+})
 
 
 
